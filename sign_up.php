@@ -1,29 +1,7 @@
 <?php
 
-// INSERT INTO tablo_adi SET kol1 = değer1
+require_once 'connect.php';
 
-//$db->query('INSERT INTO icerikler SET baslik = "başlık", icerik = "deneme içerikk", onay = 1');
-
-/*
-$sorgu = $db->prepare('INSERT INTO icerikler2 SET
-baslik = ?,
-icerik = ?,
-onay = ?');
-$ekle = $sorgu->execute([
-    'deneme başlık', 'içerik', 1
-]);
-
-if ($ekle){
-    echo 'verilerini eklendi!';
-} else {
-    $hata = $sorgu->errorInfo();
-    echo 'MySQL Hatası: '. $hata[2];
-}
-*/
-
-// $kategoriler = $db->query('SELECT * FROM kategoriler ORDER BY ad ASC')->fetchAll(PDO::FETCH_ASSOC);
-
-// form gönderilmiş
 if (isset($_POST['submit'])){
 
     $username = isset($_POST['username']) ? $_POST['username'] : null;
@@ -36,7 +14,7 @@ if (isset($_POST['submit'])){
     }
     else {
 
-        // ekleme işlemi
+        // inserting to database
         $sorgu = $db->prepare('INSERT INTO users SET
         username = ?,
         password_u = ?');
@@ -45,13 +23,14 @@ if (isset($_POST['submit'])){
             $username, $password_u
         ]);
 
-        if ($ekle){
-           alert("Users has added");
-           header('Location:index.php?sayfa=user_profile_page');
-        } else {
-            echo 'User did not add to system !';
-        }
+        // $sonId = $db->lastInsertId();
 
+        if ($ekle){
+            header('Location:landing_page.php');
+        } else {
+            $hata = $sorgu->errorInfo();
+            echo 'MySQL Error: ' . $hata[2];
+        }
     }
 
 }
@@ -60,13 +39,14 @@ if (isset($_POST['submit'])){
 
 <form action="" method="post">
 
+    <p>Sign Up Sayfası</p><br>
     Username: <br>
     <input type="text" value="<?php echo isset($_POST['username']) ? $_POST['username'] : '' ?>" name="username"> <br> <br>
 
     Password: <br>
-    <input name="password_u" cols="30" rows="10"><?php echo isset($_POST['password_u']) ? $_POST['password_u'] : '' ?></textarea> <br> <br>
+    <input type="text" value="<?php echo isset($_POST['password_u']) ? $_POST['password_u'] : '' ?>" name="password_u"> <br> <br>
 
     <input type="hidden" name="submit" value="1">   
-    <button type="submit">Sign Up</button>
+    <button type="submit">Create an Account</button>
 
 </form>
